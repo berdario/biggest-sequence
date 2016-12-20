@@ -8,20 +8,6 @@ import           Lib
 readInt :: String -> Int
 readInt = read
 
-newtype SmallList a = SmallList [a]
- deriving ( Eq, Ord, Read)
-
-instance (Show x) => Show (SmallList (NonNegative x)) where
-  show (SmallList xs) = show $ map getNonNegative xs
-
-smallNonEmpty :: [a] -> Bool
-smallNonEmpty xs = not (null xs) && length xs < 9
-
-instance Arbitrary a => Arbitrary (SmallList a) where
-  arbitrary = SmallList `fmap` (arbitrary `suchThat` smallNonEmpty)
-  shrink (SmallList x) = map SmallList $ filter smallNonEmpty $ shrinkList shrink x
-
-
 bruteForce :: [Int] -> Int
 bruteForce ns = maximum $ map (readInt . concat) $ permutations numbers
     where
@@ -35,3 +21,39 @@ prop_biggest (SmallList ns) = read (biggest numbers) == bruteForce numbers
 main :: IO ()
 main = quickCheck $ property prop_biggest
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+newtype SmallList a = SmallList [a]
+ deriving ( Eq, Ord, Read)
+
+instance (Show x) => Show (SmallList (NonNegative x)) where
+  show (SmallList xs) = show $ map getNonNegative xs
+
+smallNonEmpty :: [a] -> Bool
+smallNonEmpty xs = not (null xs) && length xs < 9
+
+instance Arbitrary a => Arbitrary (SmallList a) where
+  arbitrary = SmallList `fmap` (arbitrary `suchThat` smallNonEmpty)
+  shrink (SmallList x) = map SmallList $ filter smallNonEmpty $ shrinkList shrink x
